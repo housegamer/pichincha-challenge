@@ -51,8 +51,8 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: arn:aws:iam::446427957983:role/aws-service-role/replication.ecr.amazonaws.com/AWSServiceRoleForECRReplication
-        aws-region: us-east-1 
+        role-to-assume: arn:aws:iam::446427957983:user/dev-practice
+        aws-region: ${{ env.AWS_REGION }}
     
     - name: Login to AWS ECR
       id: login-ecr
