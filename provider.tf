@@ -1,8 +1,5 @@
 provider "aws" {
   region                   = var.region
-  shared_config_files      = ["/Users/rodrigo.delcastillo/.aws/config"]
-  shared_credentials_files = ["/Users/rodrigo.delcastillo/.aws/credentials"]
-  profile                  = "dev-practice"
 }
 
 terraform {
