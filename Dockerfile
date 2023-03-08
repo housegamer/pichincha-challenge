@@ -4,12 +4,14 @@ WORKDIR /app
 
 COPY requirements.txt ./
 
-RUN apt-get update && \
-    apt-get install -y && \
+RUN apk update && \
+    apk upgrade && \
     pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8080:80
+EXPOSE 5050
 
-CMD ["python", "./app.py"]
+# ENTRYPOINT [ "python" ]
+
+CMD ["python", "app.py"]

@@ -19,9 +19,9 @@ resource "aws_api_gateway_method" "apiGW_Method_App" {
 resource "aws_api_gateway_integration" "apiGW_Integration_App" {
   rest_api_id = aws_api_gateway_rest_api.apiGW_App.id
   resource_id = aws_api_gateway_resource.apiGW_Resource_App.id
-  http_method = aws_api_gateway_method.apiGW_Method_App
+  http_method = aws_api_gateway_method.apiGW_Method_App.http_method
   integration_http_method = "POST"
-  type = "HTTP"
+  type = "HTTP_PROXY"
   uri = aws_lambda_function.lambda_func_App.invoke_arn
 }
 
