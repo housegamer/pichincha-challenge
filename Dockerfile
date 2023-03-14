@@ -10,8 +10,6 @@ RUN apk update && \
 
 COPY . .
 
-EXPOSE 5050
-
-# ENTRYPOINT [ "python" ]
+EXPOSE 8080
 
 CMD ["python", "app.py"]

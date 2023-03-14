@@ -1,14 +1,15 @@
 name: CI Pipeline
 
 on:
+  pull_request:
+    branches: [develop]
   push:
-    branches: develop
+    branches:
+    - develop
+    - main
 
 env:
   API_KEY: ${{ secrets.API_KEY }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  AWS_REGION: us-east-1
 
 jobs:
   terraform_build:
@@ -38,31 +39,19 @@ jobs:
       id: plan
       run: terraform plan
 
-    - name: Terraform Apply
-      id: apply
-      run: terraform apply -auto-approve -target=aws_ecr_repository.Pichincha_Challenge
-
-  docker_build_push:
+  python_check:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
+    - name: SetUp Python
+      uses: actions/setup-python@v4
       with:
-        role-to-assume: arn:aws:iam::446427957983:user/dev-practice
-        aws-region: ${{ env.AWS_REGION }}
+        python-version: '3.8'
     
-    - name: Login to AWS ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-
-    - name: Build/Tag and Push Docker Image to AWS ECR
-      env:
-        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        REPOSITORY: pichincha-challenge
-        IMAGE_TAG: ${{ github.sha }}
+    - name: Install dependencies
       run: |
-        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run tests
+      run: |
+        python app.py test
