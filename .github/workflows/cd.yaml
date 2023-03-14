@@ -71,13 +71,13 @@ jobs:
 
     - name: Deploy Infraestructure
       id: apply
-      if: steps.check_tf_output.outputs.infra_exists != "true"
+      if: steps.check_tf_output.outputs.infra_exists != 'true'
       run: terraform apply -auto-approve
 
   terraform_destroy:
     runs-on: ubuntu-latest
     needs: apply
-    if: needs.apply.result == 'success' && needs.apply.outputs.check_tf_output.outputs.infra_exists == "true"
+    if: needs.apply.result == 'success' && needs.apply.outputs.check_tf_output.outputs.infra_exists == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
