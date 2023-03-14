@@ -65,12 +65,27 @@ jobs:
       id: plan
       run: terraform plan
 
+    - name: Check Terraform output
+      id: check_tf_output
+      run: echo ::set-output name=infra_exists::$(terraform output infra_exists)
+
     - name: Deploy Infraestructure
       id: apply
-      if: github.ref == 'refs/heads/main' || 'ref/head/develop' && github.event_name == 'push'
+      if: steps.check_tf_output.outputs.infra_exists != "true"
       run: terraform apply -auto-approve
 
-    - name: Destroy Infraestructure
-      id: destroy
-      if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
-      run: terraform destroy -auto-approve
+  terraform_destroy:
+    runs-on: ubuntu-latest
+    needs: apply
+    if: needs.apply.result == 'success' && needs.apply.outputs.check_tf_output.outputs.infra_exists == "true"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Configure Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.2.5
+
+      - name: Terraform destroy
+        run: terraform destroy -auto-approve
