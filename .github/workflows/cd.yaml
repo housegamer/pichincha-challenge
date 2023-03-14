@@ -75,5 +75,5 @@ jobs:
       run: terraform apply -auto-approve
 
     - name: Destroy Infrastructure
-      if: apply.result == 'success' && apply.outputs.check_tf_output.outputs.infra_exists == 'true'    
+      if: steps.apply.result == 'success' && steps.apply.outputs.check_tf_output.outputs.infra_exists == 'true'    
       run: terraform destroy -auto-approve
