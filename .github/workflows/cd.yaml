@@ -67,7 +67,7 @@ jobs:
 
     - name: Deploy Infraestructure
       id: apply
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      if: github.ref == 'refs/heads/main' || 'ref/head/develop' && github.event_name == 'push'
       run: terraform apply -auto-approve
 
     - name: Destroy Infraestructure
