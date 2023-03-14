@@ -12,8 +12,8 @@ sudo apt install docker.io -y
 
 sudo mkdir ~/.aws && touch ~/.aws/credentials
 echo "[dev-practice]
-aws_access_key_id = AKIAWP4JOBLPVXMFPM4I
-aws_secret_access_key = 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
+aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}
+aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 region = us-east-1" >> ~/.aws/credentials 
 
 export AWS_PROFILE=dev-practice
