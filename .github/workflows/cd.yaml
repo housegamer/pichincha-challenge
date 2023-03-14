@@ -79,13 +79,13 @@ jobs:
     needs: apply
     if: needs.apply.result == 'success' && needs.apply.outputs.check_tf_output.outputs.infra_exists == 'true'
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
       
-      - name: Configure Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.2.5
+    - name: Configure Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.2.5
 
-      - name: Terraform destroy
-        run: terraform destroy -auto-approve
+    - name: Terraform destroy
+      run: terraform destroy -auto-approve
