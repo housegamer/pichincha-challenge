@@ -33,6 +33,7 @@ jobs:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         REPOSITORY: pichincha-challenge
         IMAGE_TAG: ${{ github.sha }}
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
         docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
@@ -68,3 +69,8 @@ jobs:
       id: apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
+
+    - name: Destroy Infra
+      id: destroy
+      if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
+      run: terraform destroy -auto-approve
