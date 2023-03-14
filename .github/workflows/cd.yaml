@@ -9,7 +9,7 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: us-east-1
-  IAM_ROLE_GITHUB: ${{ secrets.IAM_ROLE_GITHUB }}
+  # IAM_ROLE_GITHUB: ${{ secrets.IAM_ROLE_GITHUB }}
 
 jobs:
   docker_build_push:
@@ -72,6 +72,8 @@ jobs:
 
     - name: Deploy Infrastructure
       id: apply
+      env:
+        IAM_ROLE_GITHUB: ${{ secrets.IAM_ROLE_GITHUB }}
       if: steps.check_tf_output.outputs.infra_exists != 'true'
       run: terraform apply -auto-approve
 
