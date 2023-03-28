@@ -23,6 +23,7 @@ jobs:
         aws iam put-role-policy --role-name temp-admin-instance-profile --policy-name temp-admin-instance-profile --policy-document file://role/policy.json --output json
     
     - name: Delete policy/role
+      continue-on-error: true
       run: |
         aws iam delete-role-policy --role-name temp-admin-instance-profile --policy-name temp-admin-instance-profile
         aws iam delete-role --role-name temp-admin-instance-profile
