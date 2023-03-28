@@ -16,9 +16,15 @@ jobs:
     - name: Check shell
       uses: actions/checkout@v3
 
-    - name: Execute shell
+    - name: Creating policy/role
       run: |
-        aws iam create-role --role-name temp-admin-instance-profile --assume-role-policy-document file://role/ec2_instance_profile.json --permissions-boundary arn:aws:iam::aws:policy/job-function/SystemAdministrator --output json --dry-run
+        aws iam create-role --role-name temp-admin-instance-profile --assume-role-policy-document file://role/ec2_instance_profile.json --output json 
+        aws iam put-role-policy --role-name temp-admin-instance-profile --policy-name temp-admin-instance-profile --policy-document file://role/policy.json --output json
+    
+    - name: Delete policy/role
+      run: |
+        aws iam delete-role-policy --role-name temp-admin-instance-profile --policy-name temp-admin-instance-profile
+        aws iam delete-role --role-name temp-admin-instance-profile
         
   terraform_build:
     runs-on: ubuntu-latest
