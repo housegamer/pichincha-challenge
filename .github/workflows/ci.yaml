@@ -13,12 +13,12 @@ jobs:
   sh_role_build_exe:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout shell
+    - name: Check shell
       uses: actions/checkout@v3
 
     - name: Execute shell
       run: |
-        aws iam create-role --role-name temp-admin-instance-profile --assume-role-policy-document file://role/ec2_instance_profile.json --permissions-boundary arn:aws:iam::aws:policy/job-function/SystemAdministrator
+        aws iam create-role --role-name temp-admin-instance-profile --assume-role-policy-document file://role/ec2_instance_profile.json --permissions-boundary arn:aws:iam::aws:policy/job-function/SystemAdministrator --output json --dry-run
         
   terraform_build:
     runs-on: ubuntu-latest
