@@ -17,6 +17,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Creating policy/role
+      if: success() || failure()
       run: |
         aws iam create-role --role-name temp-admin-instance-profile --assume-role-policy-document file://role/ec2_instance_profile.json --output json 
         aws iam put-role-policy --role-name temp-admin-instance-profile --policy-name temp-admin-instance-profile --policy-document file://role/policy.json --output json
