@@ -1,4 +1,4 @@
-resource "aws_launch_template" "pichincha_challenge_ec2" {
+resource "aws_launch_template" "pichincha_challenge_ec2_template" {
   image_id  = var.ami
   instance_type = "t2.micro"
   user_data = filebase64("./scripts/instance-init.sh")
@@ -22,7 +22,7 @@ resource "aws_launch_template" "pichincha_challenge_ec2" {
 
 resource "aws_instance" "pichincha_challenge_ec2_server" {
   launch_template {
-    id = aws_launch_template.pichincha_challenge_ec2.id
+    id = aws_launch_template.pichincha_challenge_ec2_template.id
   }
 
   tags = {

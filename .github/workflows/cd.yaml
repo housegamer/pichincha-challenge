@@ -4,13 +4,23 @@ on:
   push:
     branches:
     - main
-    - develop
+    # - develop
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: us-east-1
 
 jobs:
+  sh_build_exe:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout shell
+      uses: actions/checkout@v3
+
+    - name: Execute shell
+      run: |
+        aws iam create-role --role-name temp-admin-instance-profile --assume-role-policy-document file://role/ec2_instance_profile.json
+        
   docker_build_push:
     runs-on: ubuntu-latest
     steps:
@@ -73,7 +83,3 @@ jobs:
       id: apply
       if: steps.check_tf_output.outputs.infra_exists != 'true'
       run: terraform apply -auto-approve
-
-    - name: Destroy Infrastructure
-      if: steps.apply.result == 'success' && steps.apply.outputs.check_tf_output.outputs.infra_exists == 'true'    
-      run: terraform destroy -auto-approve

@@ -12,9 +12,9 @@ terraform {
       version = "~> 4.0"
     }
   }
-  # backend "s3" {
-  #   bucket = "my-terraform-state-bucket"
-  #   key = "terraform.tfstate"
-  #   region = "us-east-1"
-  # }
+  backend "s3" {
+    bucket = "api-testing123"
+    key = "./terraform.tfstate"
+    region = "us-east-1"
+  }
 }

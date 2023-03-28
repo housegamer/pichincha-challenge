@@ -1,0 +1,11 @@
+{
+    "Version": "20120-10-17",
+    "Statement": [
+        {
+            "Sid": "TempAdminInstanceProfile",
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*"
+        }
+    ]
+}

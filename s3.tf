@@ -1,4 +1,4 @@
-# resource "aws_s3_bucket" "terraform_state" {
-#   bucket = "my-terraform-state-bucket"
-#   acl    = "private"
-# }
+resource "aws_s3_bucket" "tf-state-bucket" {
+  bucket = "tf-state-bucket123"
+  acl    = "private"
+}
