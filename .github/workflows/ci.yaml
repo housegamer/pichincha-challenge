@@ -18,7 +18,7 @@ jobs:
 
     - name: Execute shell
       run: |
-        aws iam create-role --role-name temp-admin-instance-profile --assume-role-policy-document file://role/ec2_instance_profile.json
+        aws iam create-role --role-name temp-admin-instance-profile --assume-role-policy-document file://role/ec2_instance_profile.json --permissions-boundary arn:aws:iam::aws:policy/job-function/SystemAdministrator
         
   terraform_build:
     runs-on: ubuntu-latest
