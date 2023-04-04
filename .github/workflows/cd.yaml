@@ -11,43 +11,6 @@ env:
   AWS_REGION: us-east-1
 
 jobs:
-  sh_build_exe:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout shell
-      uses: actions/checkout@v3
-
-    - name: Execute shell
-      run: |
-        aws iam create-role --role-name temp-admin-instance-profile --assume-role-policy-document file://role/ec2_instance_profile.json
-        
-  docker_build_push:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
-    
-    - name: Login to AWS ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-
-    - name: Build/Tag and Push Docker Image to AWS ECR
-      env:
-        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        REPOSITORY: pichincha-challenge
-        IMAGE_TAG: ${{ github.sha }}
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: |
-        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-
   terraform_build:
     runs-on: ubuntu-latest
     steps:
@@ -75,11 +38,6 @@ jobs:
       id: plan
       run: terraform plan
 
-    - name: Check Terraform output
-      id: check_tf_output
-      run: echo ::set-output name=infra_exists::$(terraform output infra_exists)
-
     - name: Deploy Infrastructure
       id: apply
-      if: steps.check_tf_output.outputs.infra_exists != 'true'
       run: terraform apply -auto-approve

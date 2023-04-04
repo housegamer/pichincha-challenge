@@ -10,12 +10,13 @@ resource "aws_vpc" "pichincha_challenge_vpc" {
 
 resource "aws_subnet" "pichincha_challenge_sn" {
   vpc_id                  = aws_vpc.pichincha_challenge_vpc.id
-  cidr_block = "10.16.0.128/25"
-  availability_zone       = "us-east-1a"
-  map_public_ip_on_launch = true
+  for_each                = var.az
+  cidr_block              = cidrsubnet(aws_vpc.pichincha_challenge_vpc.cidr_block, 2, each.value)
+  availability_zone       = each.key
+  map_public_ip_on_launch = var.az == "us-east-1a" ? true : false
 
   tags = {
-    "Name" = "pichincha-challenge-public-sn",
+    "Name" = "pichincha-challenge-${each.key}",
     "name" = "pichincha challenge sn"
   }
 }

@@ -10,24 +10,44 @@ env:
   AWS_REGION: us-east-1
 
 jobs:
-  sh_role_build_exe:
+  python_check:
     runs-on: ubuntu-latest
     steps:
-    - name: Check shell
+    - name: Check Repository
       uses: actions/checkout@v3
 
-    - name: Creating policy/role
-      continue-on-error: true 
-      run: |
-        aws iam create-role --role-name temp-admin-instance-profile --assume-role-policy-document file://role/ec2_instance_profile.json --output json || true
-        aws iam put-role-policy --role-name temp-admin-instance-profile --policy-name temp-admin-instance-profile --policy-document file://role/policy.json --output json
+    - name: Lint Python
+      uses: cclauss/Find-Python-syntax-errors-action@master
+      
+  docker_build_push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
     
-    - name: Delete policy/role
-      continue-on-error: true
+    - name: Login to AWS ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build/Tag and Push Docker Image to AWS ECR
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: pichincha-challenge
+        IMAGE_TAG: ${{ github.sha }}
       run: |
-        aws iam delete-role-policy --role-name temp-admin-instance-profile --policy-name temp-admin-instance-profile || true
-        aws iam delete-role --role-name temp-admin-instance-profile
-        
+        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+    - name: Check ECR Images
+      run: aws ecr describe-images --repository-name pichincha-challenge | jq '.imageDetails | sort_by(.imagePushedAt)'
+                
   terraform_build:
     runs-on: ubuntu-latest
     steps:
@@ -54,12 +74,3 @@ jobs:
     - name: Terraform Plan
       id: plan
       run: terraform plan
-
-  python_check:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Check Repository
-      uses: actions/checkout@v3
-
-    - name: Lint Python
-      uses: cclauss/Find-Python-syntax-errors-action@master

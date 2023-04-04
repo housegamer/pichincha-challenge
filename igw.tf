@@ -3,6 +3,6 @@ resource "aws_internet_gateway" "pichincha_challenge_igw" {
 
   tags = {
     Name = "pichincha-challenge-igw"
-    name  = "pichincha challenage igw"
+    name = "pichincha challenage igw"
   }
 }

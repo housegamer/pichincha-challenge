@@ -1,14 +1,14 @@
 resource "aws_launch_template" "pichincha_challenge_ec2_template" {
-  image_id  = var.ami
+  image_id      = var.ami
   instance_type = "t2.micro"
-  user_data = filebase64("./scripts/instance-init.sh")
+  user_data     = filebase64("./scripts/instance-init.sh")
   iam_instance_profile {
-    name = "temp-admin-instance-profile"
+    name = aws_iam_role.pichincha_challenge_role.name
   }
 
   network_interfaces {
     security_groups = [aws_security_group.pichincha_challenge_sg.id]
-    subnet_id = aws_subnet.pichincha_challenge_sn.id
+    subnet_id       = aws_subnet.pichincha_challenge_sn.us-east-1a.id
   }
 
   block_device_mappings {
