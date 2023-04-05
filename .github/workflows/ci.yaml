@@ -78,7 +78,7 @@ jobs:
       run: terraform plan
 
   release_build:
-    runs-on: ubunutu-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
 
