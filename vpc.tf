@@ -1,5 +1,5 @@
 resource "aws_vpc" "pichincha_challenge_vpc" {
-  cidr_block       = "10.16.0.0/24"
+  cidr_block       = var.vpc_cidr_block
   instance_tenancy = "default"
 
   tags = {

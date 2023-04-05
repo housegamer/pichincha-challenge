@@ -8,13 +8,13 @@ variable "ami" {
 }
 
 variable "vpc_cidr_block" {
-  description = "VPC CIDR block"
+  description = "Default VPC CIDR block"
   type = string
-  default = ""
+  default = "10.16.0.0/24"
 }
 
 variable "az" {
-  description = "Subnet CIDR Block"
+  description = "Default Availability Zone "
   type = map
   default = {
     "us-east-1a" = 1

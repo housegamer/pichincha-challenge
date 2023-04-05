@@ -12,6 +12,7 @@ resource "aws_route_table" "pichincha_challenge_rtb" {
 }
 
 resource "aws_route_table_association" "pichincha_challenge_rtb_association" {
-  subnet_id      = aws_subnet.pichincha_challenge_sn.id
+  for_each = var.az
+  subnet_id      = aws_subnet.pichincha_challenge_sn[each.key].id
   route_table_id = aws_route_table.pichincha_challenge_rtb.id
 }
