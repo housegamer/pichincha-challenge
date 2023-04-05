@@ -84,6 +84,6 @@ jobs:
 
     - name: Create Release
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
       if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
       run: npx semantic-release
