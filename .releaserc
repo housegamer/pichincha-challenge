@@ -1,6 +1,6 @@
 {
   "branches": "develop",
-  "repository": "https://github.com/housegamer/pichincha-challenge",
+  "repositoryUrl": "https://github.com/housegamer/pichincha-challenge",
   "plugins": [
     '@semantic-release/commit-analyzer', 
     '@semantic-release/release-notes-generator',  
